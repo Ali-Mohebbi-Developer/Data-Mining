@@ -1,185 +1,224 @@
-# پروژه کامل داده‌کاوی محصولات فروشگاهی
+<div dir="rtl">
 
-این مخزن یک پروژه کامل و ماژولار برای درس داده‌کاوی است. داده از صفحات عمومی وب جمع‌آوری می‌شود و سپس مراحل پاک‌سازی، مهندسی ویژگی، تحلیل اکتشافی، قواعد انجمنی، دسته‌بندی و خوشه‌بندی روی آن اجرا می‌شود.
+<h1 align="center">پایپ‌لاین داده‌کاوی کتاب‌ها</h1>
 
-## موضوع و منبع داده
+<p align="center">
+  یک پایپ‌لاین کامل و ماژولار برای داده‌کاوی محصولات فروشگاهی:<br>
+  وب‌اسکرپینگ، پاک‌سازی، مهندسی ویژگی، تحلیل اکتشافی، قواعد انجمنی، دسته‌بندی و خوشه‌بندی.
+</p>
 
-موضوع انتخاب‌شده «محصولات فروشگاهی» و نوع محصول «کتاب» است. منبع اصلی سایت عمومی `Books to Scrape` است که برای تمرین وب‌اسکرپینگ طراحی شده و حدود ۱۰۰۰ محصول دارد.
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white">
+  <img alt="scikit-learn" src="https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white">
+  <img alt="pandas" src="https://img.shields.io/badge/pandas-Data-150458?logo=pandas&logoColor=white">
+  <img alt="Reproducible" src="https://img.shields.io/badge/random__state-42-blue">
+  <img alt="Offline" src="https://img.shields.io/badge/runs-offline%20by%20default-success">
+</p>
 
-فایل `data/raw/books_seed.csv` یک نسخه خام ذخیره‌شده با ۹۹۳ رکورد است تا اجرای پروژه بدون اسکرپ مجدد نیز ممکن باشد. اسکرپر کامل در `src/web_scraper.py` قرار دارد و با گزینه `--scrape` قابل اجرا است.
+---
+
+## فهرست مطالب
+
+- [معرفی](#معرفی)
+- [ویژگی‌های کلیدی](#ویژگیهای-کلیدی)
+- [جریان کار](#جریان-کار)
+- [مجموعه داده](#مجموعه-داده)
+- [روش‌شناسی](#روششناسی)
+- [ساختار پروژه](#ساختار-پروژه)
+- [نصب](#نصب)
+- [نحوه استفاده](#نحوه-استفاده)
+- [خروجی‌ها](#خروجیها)
+- [بازتولیدپذیری](#بازتولیدپذیری)
+- [اسکرپ مسئولانه](#اسکرپ-مسئولانه)
+
+---
+
+## معرفی
+
+این پروژه داده خام محصولات یک فروشگاه اینترنتی (در اینجا حدود ۱۰۰۰ عنوان کتاب) را از ابتدا تا انتها تحلیل می‌کند. تمام مراحل از طریق یک نقطه ورود (`main.py`) اجرا می‌شوند و خروجی آن‌ها شامل داده‌های پاک‌سازی‌شده، نمودارها، جدول‌های معیار، مدل‌های ذخیره‌شده و یک گزارش خودکار است.
+
+یک نسخه خام از داده همراه مخزن ارائه شده است؛ بنابراین کل پایپ‌لاین **بدون نیاز به اینترنت** اجرا می‌شود. در صورت نیاز، اسکرپر داخلی می‌تواند داده را دوباره از منبع جمع‌آوری کند.
+
+## ویژگی‌های کلیدی
+
+- **جمع‌آوری داده:** وب‌اسکرپر مؤدب با تأخیر قابل تنظیم بین درخواست‌ها و امکان محدود کردن تعداد صفحات.
+- **پیش‌پردازش و مهندسی ویژگی:** پاک‌سازی مقاوم با مقادیر پیش‌فرض برای ستون‌های ناقص، به‌همراه ویژگی‌های مشتق‌شده از قیمت، امتیاز، عنوان و متن.
+- **تحلیل اکتشافی:** نمودارهای آماده برای توزیع و رابطه متغیرها.
+- **کاوش قواعد انجمنی:** الگوریتم Apriori با معیارهای Support، Confidence و Lift؛ هم به‌صورت پیاده‌سازی دستی و هم با کتابخانه `mlxtend`.
+- **دسته‌بندی:** Logistic Regression و Random Forest روی هدف سه‌کلاسه گروه قیمتی.
+- **خوشه‌بندی:** KMeans و Agglomerative روی ترکیب TF-IDF و ویژگی‌های عددی، با انتخاب خودکار تعداد خوشه.
+- **گزارش‌سازی خودکار:** معیارها، جدول‌ها، نمودارها و گزارش Markdown در هر اجرا بازتولید می‌شوند.
+- **قطعیت در نتایج:** Random State ثابت و مدیریت متمرکز مسیرها.
+
+## جریان کار
+
+```mermaid
+flowchart LR
+    A[Raw data<br/>CSV or scraper] --> B[Preprocessing]
+    B --> C[Feature engineering]
+    C --> D[Exploratory analysis]
+    C --> E[Association rules]
+    C --> F[Classification]
+    C --> G[Clustering]
+    D --> H[(Figures)]
+    E --> I[(Tables)]
+    F --> I
+    G --> I
+    F --> J[(Models)]
+    G --> J
+    H --> K[reports.md]
+    I --> K
+```
+
+## مجموعه داده
+
+| | |
+|---|---|
+| **حوزه** | محصولات فروشگاهی |
+| **نوع محصول** | کتاب |
+| **منبع** | [Books to Scrape](https://books.toscrape.com/) (سایت عمومی و آزمایشی که برای تمرین اسکرپینگ ساخته شده است) |
+| **حجم** | حدود ۱۰۰۰ محصول (نسخه همراه پروژه: ۹۹۳ رکورد) |
+| **نسخه همراه** | `data/raw/books_seed.csv` |
+| **صفحه نمونه** | `data/raw/sample_catalogue_page.html` |
+
+ورودی سفارشی هم پشتیبانی می‌شود. فایل CSV حداقل باید ستون‌های `title` و `price` را داشته باشد و ستون‌های دیگر در مرحله پیش‌پردازش با مقدار پیش‌فرض مدیریت می‌شوند.
+
+## روش‌شناسی
+
+### قواعد انجمنی
+
+برای هر کتاب یک Basket از ویژگی‌های دسته‌ای ساخته می‌شود:
+
+- گروه قیمت
+- امتیاز و گروه امتیاز
+- طول عنوان
+- موضوع متن
+- وجود شماره سری
+- گروه حرف اول
+
+سپس Apriori اجرا شده و قواعد با سه معیار **Support**، **Confidence** و **Lift** ارزیابی می‌شوند. موتور پیش‌فرض، پیاده‌سازی دستی (`apriori_manual.py`) است و با گزینه `--association-engine mlxtend` می‌توان نسخه کتابخانه‌ای را اجرا کرد.
+
+### دسته‌بندی
+
+- **برچسب هدف:** `price_band` با سه کلاس `Low`، `Medium` و `High`
+- **تقسیم داده:** Stratified Train/Test Split
+- **مدل‌ها:** Logistic Regression و Random Forest
+- **معیارها:** Accuracy به‌همراه Precision، Recall و F1 به‌صورت Macro
+- **خروجی‌ها:** ماتریس درهم‌ریختگی هر مدل و مدل‌های سریالایز‌شده
+
+### خوشه‌بندی
+
+1. ترکیب ویژگی‌های متنی **TF-IDF** با ویژگی‌های عددی استانداردشده
+2. کاهش بعد با **Truncated SVD**
+3. انتخاب تعداد خوشه با **Silhouette Score** برای `k` از ۲ تا ۶
+4. اجرای **KMeans** و **Agglomerative Clustering**
+5. استخراج پروفایل هر خوشه برای تفسیر نتایج
 
 ## ساختار پروژه
 
 ```text
 books_data_mining_project/
 ├── data/
-│   ├── raw/
-│   │   ├── books_seed.csv
-│   │   └── sample_catalogue_page.html
-│   ├── interim/
-│   └── processed/
-├── models/
+│   ├── raw/                       # داده خام و نسخه همراه پروژه
+│   ├── interim/                   # داده پاک‌سازی‌شده
+│   └── processed/                 # داده همراه با ویژگی‌ها
+├── models/                        # مدل‌های ذخیره‌شده (.joblib)
 ├── notebooks/
-│   └── complete_analysis.ipynb
+│   └── complete_analysis.ipynb    # تحلیل کامل در نوت‌بوک
 ├── reports/
-│   ├── figures/
-│   └── tables/
+│   ├── figures/                   # نمودارهای تولیدشده
+│   └── tables/                    # جدول‌های معیار و قواعد
 ├── src/
-│   ├── apriori_library.py
-│   ├── apriori_manual.py
+│   ├── config.py                  # مسیرها و تنظیمات مرکزی
+│   ├── data_loader.py             # بارگذاری داده
+│   ├── web_scraper.py             # اسکرپر
+│   ├── preprocessing.py           # پاک‌سازی
+│   ├── feature_engineering.py     # مهندسی ویژگی
+│   ├── exploratory_analysis.py    # تحلیل اکتشافی
+│   ├── transaction_builder.py     # ساخت Basket
+│   ├── apriori_manual.py          # Apriori دستی
+│   ├── apriori_library.py         # Apriori با mlxtend
 │   ├── association_rules_analysis.py
 │   ├── classification.py
 │   ├── clustering.py
-│   ├── config.py
-│   ├── data_loader.py
-│   ├── exploratory_analysis.py
-│   ├── feature_engineering.py
-│   ├── pipeline.py
-│   ├── preprocessing.py
-│   ├── report_builder.py
-│   ├── transaction_builder.py
-│   ├── utils.py
 │   ├── visualization.py
-│   └── web_scraper.py
-├── for_student.md
-├── main.py
-├── overview.md
-├── questions.md
-├── README.md
-├── reports.md
+│   ├── report_builder.py          # تولید reports.md
+│   ├── pipeline.py                # هماهنگی همه مراحل
+│   └── utils.py
+├── main.py                        # نقطه ورود (CLI)
+├── overview.md                    # مرور کلی پروژه
+├── reports.md                     # گزارش تولیدشده
 └── requirements.txt
 ```
 
-## نصب و اجرا در Linux و macOS
+## نصب
 
-1. وارد پوشه پروژه شوید:
+**پیش‌نیازها:** Python 3 و `pip`
+
+### Linux / macOS
 
 ```bash
 cd books_data_mining_project
-```
-
-2. محیط مجازی بسازید:
-
-```bash
 python3 -m venv venv
-```
-
-3. محیط مجازی را فعال کنید:
-
-```bash
 source venv/bin/activate
-```
-
-4. وابستگی‌ها را نصب کنید:
-
-```bash
 python3 -m pip install -r requirements.txt
 ```
 
-5. پروژه کامل را اجرا کنید:
-
-```bash
-python3 main.py
-```
-
-## نصب و اجرا در Windows PowerShell
+### Windows (PowerShell)
 
 ```powershell
 cd books_data_mining_project
 python -m venv venv
 venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python main.py
 ```
 
-## اجرای اسکرپ مجدد
+## نحوه استفاده
 
-برای جمع‌آوری مستقیم داده از وب و سپس اجرای همه تحلیل‌ها:
+اجرای کامل پایپ‌لاین روی داده همراه پروژه:
+
+```bash
+python3 main.py
+```
+
+جمع‌آوری مجدد داده از وب و سپس اجرای همه مراحل:
 
 ```bash
 python3 main.py --scrape
 ```
 
-برای تست سریع اسکرپر روی دو صفحه فهرست:
+### راهنمای گزینه‌های CLI
 
-```bash
-python3 main.py --scrape --max-pages 2
-```
-
-اسکرپر بین درخواست‌ها مکث دارد. مقدار مکث با گزینه زیر قابل تغییر است:
-
-```bash
-python3 main.py --scrape --delay 0.8
-```
-
-## اجرای Apriori با کتابخانه mlxtend
-
-حالت پیش‌فرض از پیاده‌سازی دستی Apriori استفاده می‌کند. برای اجرای نسخه کتابخانه‌ای:
-
-```bash
-python3 main.py --association-engine mlxtend
-```
-
-## اجرای پروژه با فایل خام دیگر
-
-```bash
-python3 main.py --input path/to/input.csv
-```
-
-فایل ورودی حداقل باید ستون‌های `title` و `price` را داشته باشد. ستون‌های دیگر در مرحله پاک‌سازی با مقدار پیش‌فرض مدیریت می‌شوند.
+| گزینه | توضیح | مثال |
+|---|---|---|
+| *(بدون گزینه)* | اجرای کامل روی نسخه همراه پروژه | `python3 main.py` |
+| `--scrape` | جمع‌آوری داده زنده پیش از تحلیل | `python3 main.py --scrape` |
+| `--max-pages N` | محدود کردن تعداد صفحات فهرست (تست سریع) | `python3 main.py --scrape --max-pages 2` |
+| `--delay S` | مکث بین درخواست‌ها به ثانیه | `python3 main.py --scrape --delay 0.8` |
+| `--association-engine mlxtend` | استفاده از `mlxtend` به‌جای Apriori دستی | `python3 main.py --association-engine mlxtend` |
+| `--input PATH` | استفاده از فایل CSV دلخواه | `python3 main.py --input path/to/input.csv` |
 
 ## خروجی‌ها
 
-پس از اجرای موفق، فایل‌های زیر ساخته یا به‌روزرسانی می‌شوند:
+| دسته | فایل‌ها |
+|---|---|
+| **داده‌ها** | `data/interim/books_cleaned.csv`، `data/processed/books_features.csv` |
+| **نمودارها** | `reports/figures/price_distribution.png`، `rating_counts.png`، `price_by_rating.png` |
+| **قواعد انجمنی** | `reports/tables/association_rules.csv` |
+| **دسته‌بندی** | `reports/tables/classification_metrics.csv`، `confusion_matrix_logistic_regression.csv`، `confusion_matrix_random_forest.csv` |
+| **خوشه‌بندی** | `reports/tables/k_selection_scores.csv`، `clustering_metrics.csv`، `cluster_profiles_kmeans.csv`، `cluster_profiles_agglomerative.csv` |
+| **مدل‌ها** | `models/logistic_regression.joblib`، `random_forest.joblib`، `kmeans.joblib` |
+| **گزارش** | `reports.md` |
 
-- `data/interim/books_cleaned.csv`
-- `data/processed/books_features.csv`
-- `reports/figures/price_distribution.png`
-- `reports/figures/rating_counts.png`
-- `reports/figures/price_by_rating.png`
-- `reports/tables/association_rules.csv`
-- `reports/tables/classification_metrics.csv`
-- `reports/tables/confusion_matrix_logistic_regression.csv`
-- `reports/tables/confusion_matrix_random_forest.csv`
-- `reports/tables/k_selection_scores.csv`
-- `reports/tables/clustering_metrics.csv`
-- `reports/tables/cluster_profiles_kmeans.csv`
-- `reports/tables/cluster_profiles_agglomerative.csv`
-- `models/logistic_regression.joblib`
-- `models/random_forest.joblib`
-- `models/kmeans.joblib`
-- `reports.md`
+## بازتولیدپذیری
 
-## روش‌های داده‌کاوی
+- مقدار `random_state` در همه مراحل تصادفی برابر `42` است.
+- همه مسیرها یک‌بار در `src/config.py` تعریف شده‌اند.
+- اجرای پیش‌فرض کاملاً آفلاین است و فقط `--scrape` به اینترنت نیاز دارد.
+- داده خام همراه مخزن نگهداری می‌شود، پس نتایج روی هر سیستمی قابل تکرار است.
 
-### قواعد انجمنی
+## اسکرپ مسئولانه
 
-برای هر کتاب یک Basket از ویژگی‌های دسته‌ای ساخته می‌شود. ویژگی‌هایی مانند گروه قیمت، امتیاز، گروه امتیاز، طول عنوان، موضوع متن، وجود شماره سری و گروه حرف اول در Basket قرار می‌گیرند. Apriori با معیارهای Support، Confidence و Lift اجرا می‌شود.
+منبع داده یک سایت آزمایشی است که برای تمرین اسکرپینگ ساخته شده است. اسکرپر بین درخواست‌ها مکث می‌کند تا فشاری به سرور وارد نشود؛ لطفاً مقدار `--delay` را در حد معقول نگه دارید. اگر اسکرپر را برای سایت دیگری تغییر می‌دهید، پیش‌تر شرایط استفاده و فایل `robots.txt` آن را بررسی کنید.
 
-### دسته‌بندی
-
-برچسب هدف `price_band` است و سه کلاس Low، Medium و High دارد. داده با روش Stratified Train/Test Split تقسیم می‌شود. مدل‌های زیر اجرا می‌شوند:
-
-- Logistic Regression
-- Random Forest
-
-معیارهای Accuracy، Precision، Recall و F1 به‌صورت Macro گزارش می‌شوند.
-
-### خوشه‌بندی
-
-TF-IDF متن با ویژگی‌های عددی استانداردشده ترکیب می‌شود. سپس کاهش بعد با Truncated SVD انجام می‌گیرد. تعداد خوشه با Silhouette Score برای k بین ۲ تا ۶ انتخاب می‌شود. الگوریتم‌های زیر اجرا می‌شوند:
-
-- KMeans
-- Agglomerative Clustering
-
-## نکات بازتولیدپذیری
-
-- مقدار Random State برابر ۴۲ است.
-- همه مسیرها در `src/config.py` تعریف شده‌اند.
-- اجرای پیش‌فرض به اینترنت نیاز ندارد.
-- اجرای `--scrape` به اینترنت نیاز دارد.
-- داده خام همراه پروژه برای اجرای فوری قرار داده شده است.
-
-## فایل آموزشی شخصی
-
-فایل `for_student.md` شرح مرحله‌به‌مرحله کد، منطق مدل‌ها و پرسش‌های احتمالی استاد را توضیح می‌دهد. این فایل بخشی از اجرای پروژه نیست و می‌توان پیش از تحویل حذفش کرد.
+</div>
