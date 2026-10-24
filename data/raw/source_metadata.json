@@ -1,0 +1,9 @@
+{
+  "original_source": "https://books.toscrape.com/",
+  "source_type": "public web scraping sandbox",
+  "seed_cache_source": "https://raw.githubusercontent.com/ZohaibCodez/books-to-scrape-dataset/refs/heads/main/data/complete_books.csv",
+  "seed_records": 993,
+  "retrieved_for_project": "2026-07-26",
+  "refresh_command": "python3 main.py --scrape",
+  "usage_note": "The bundled seed cache enables offline execution. The project scraper collects the original public pages directly."
+}

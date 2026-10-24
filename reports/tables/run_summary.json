@@ -1,0 +1,10 @@
+{
+  "raw_records": 993,
+  "clean_records": 993,
+  "processed_columns": 37,
+  "association_rules": 711,
+  "best_classification_model": "random_forest",
+  "best_classification_f1": 0.4222851371445749,
+  "best_clustering_algorithm": "Agglomerative",
+  "best_clustering_silhouette": 0.60578581762463
+}

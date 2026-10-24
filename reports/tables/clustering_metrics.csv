@@ -1,0 +1,3 @@
+algorithm,clusters,silhouette
+KMeans,2,0.5570898207872114
+Agglomerative,2,0.60578581762463

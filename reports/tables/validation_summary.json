@@ -1,0 +1,14 @@
+{
+  "raw_records": 993,
+  "processed_records": 993,
+  "processed_columns": 37,
+  "numeric_columns": 15,
+  "categorical_columns": 21,
+  "text_column_present": true,
+  "association_rules": 100,
+  "classification_models": 2,
+  "clustering_algorithms": 2,
+  "readme_has_activate": true,
+  "readme_has_install": true,
+  "readme_has_run": true
+}
